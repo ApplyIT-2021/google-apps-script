@@ -1,0 +1,52 @@
+function getJournalPublicationHeaders() {
+  return [
+    ["Title", "Authors", "Publisher", "Volume", "Issue", "Page"]
+  ];
+}
+
+function getJournalPublicationDetails(doi) {
+  let response = UrlFetchApp.fetch("https://api.crossref.org/works/"+doi);
+  let publicationOb = JSON.parse(response.getContentText());
+  let messageOb = publicationOb.message;
+  
+  let title = messageOb.title[0];
+  let page = messageOb.page;
+  let publisher = messageOb.publisher;
+  let volume = messageOb.volume;
+  let issue = messageOb.issue;
+  let authorDetails = "";
+  for(let author of messageOb.author) {
+    authorDetails = authorDetails+" "+author.given+" "+author.family+";"
+  }
+
+  return [
+    [title, authorDetails, publisher, volume, issue, page]
+  ];  
+}
+
+function getConferencePublicationHeaders() {
+  return [
+    ["Title", "Authors", "Conference", "Location", "Publisher", "Page"]
+  ];
+}
+
+function getConferencePublicationDetails(doi) {
+  let response = UrlFetchApp.fetch("https://api.crossref.org/works/"+doi);
+  let publicationOb = JSON.parse(response.getContentText());
+  let messageOb = publicationOb.message;
+  
+  let title = messageOb.title[0];
+  let page = messageOb.page;
+  let publisher = messageOb.publisher;
+  let conference = messageOb.event.name;
+  let location = messageOb.event.location;
+
+  let authorDetails = "";
+  for(let author of messageOb.author) {
+    authorDetails = authorDetails+" "+author.given+" "+author.family+";"
+  }
+
+  return [
+    [title, authorDetails, conference, location, publisher, page]
+  ];  
+}
